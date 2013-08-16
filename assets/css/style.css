@@ -1,0 +1,11 @@
+.delivery-box { padding: 10px 10px; auto; border-radius: 8px; border: 1px dotted #F0D48D; margin-bottom: 8px; }
+.delivery-box .title { color: black; }
+.delivery-box .title .big { font-size: 16px; font-family: Oswald; text-transform: uppercase; }
+
+#shipping_method .marked   { text-decoration: underline; font-weight: normal; color: #0a78a3; }
+#shipping_method li.level1 { color: #cc2222; font-weight: mormal; }
+#shipping_method li.level1 input.radio { display: none; }
+#shipping_method li.level1 label { cursor: pointer; }
+#shipping_method li.level1 label label { color: black; }
+#shipping_method { margin: 0; margin-top: 10px; }
+#shipping_method .extra { margin-right: 20px; }

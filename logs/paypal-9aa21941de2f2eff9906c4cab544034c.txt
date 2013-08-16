@@ -1,0 +1,8 @@
+08-06-2013 @ 14:29:52 - Generating payment form for order OL-1965. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-06-2013 @ 16:14:23 - Generating payment form for order OL-1966. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 16:45:19 - Generating payment form for order OL-1967. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 16:47:27 - Generating payment form for order OL-1968. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 16:49:28 - Generating payment form for order OL-1968. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 16:53:15 - Generating payment form for order OL-1968. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 16:59:07 - Generating payment form for order OL-1968. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
+08-07-2013 @ 17:02:57 - Generating payment form for order OL-1968. Notify URL: http://www.kidbags.ru/?wc-api=WC_Paypal_Russian_Payment_Gateway
