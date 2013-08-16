@@ -168,3 +168,18 @@ SELECT fn.__new_taxonomy('cancelled','shop_order_status');
 
 DROP FUNCTION fn.__get_next_post_uri() CASCADE;
 DROP FUNCTION fn.__new_taxonomy(text, text);
+
+CREATE OR REPLACE FUNCTION fn."between"("from" time without time zone, "to" time without time zone, it time without time zone)
+  RETURNS boolean AS
+$BODY$
+SELECT
+  CASE WHEN (($1 <= $3 OR $1 IS NULL) AND ($3 <= $2 OR $2 IS NULL)) THEN true
+       WHEN ($2 < $1 AND (($3 >= $1 OR $1 IS NULL) OR ($2 >= $3 OR $2 IS NULL))) THEN true
+       ELSE false
+  END;
+ $BODY$
+  LANGUAGE sql IMMUTABLE
+  COST 100;
+ALTER FUNCTION fn."between"(time without time zone, time without time zone, time without time zone)
+  OWNER TO wordpress;
+
