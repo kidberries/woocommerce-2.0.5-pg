@@ -806,12 +806,15 @@ function process_product_meta_variable( $post_id ) {
 		'fields' 	=> 'ids',
 		'post_status'	=> 'publish'
 	) );
+	$children[] = $post_parent;
 
-	$lowest_price = $lowest_purchase_price = $lowest_regular_price = $lowest_sale_price = $highest_price = $highest_purchase_price = $highest_regular_price = $highest_sale_price = '';
+	$lowest_price  = $highest_price = '';
+	$lowest_purchase_price = $highest_purchase_price = '';
+	$lowest_regular_price = $highest_regular_price = '';
+	$lowest_sale_price = $highest_sale_price = '';
 
 	if ( $children ) {
 		foreach ( $children as $child ) {
-
 			$child_price 			= get_post_meta( $child, '_price', true );
 			$child_purchase_price		= get_post_meta( $child, '_purchase_price', true );
 			$child_regular_price		= get_post_meta( $child, '_regular_price', true );
@@ -841,8 +844,8 @@ function process_product_meta_variable( $post_id ) {
 			}
 		}
 
-    	$lowest_price 	= $lowest_sale_price === '' || $lowest_regular_price < $lowest_sale_price ? $lowest_regular_price : $lowest_sale_price;
-		$highest_price 	= $highest_sale_price === '' || $highest_regular_price > $highest_sale_price ? $highest_regular_price : $highest_sale_price;
+		$lowest_price  = $lowest_sale_price === '' || $lowest_regular_price < $lowest_sale_price ? $lowest_regular_price : $lowest_sale_price;
+		$highest_price = $highest_sale_price === '' || $highest_regular_price > $highest_sale_price ? $highest_regular_price : $highest_sale_price;
 	}
 
 	update_post_meta( $post_parent, '_price', $lowest_price );

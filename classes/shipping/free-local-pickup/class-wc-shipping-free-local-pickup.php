@@ -45,7 +45,6 @@ class WC_Shipping_Free_Local_Pickup extends WC_Shipping_Method {
 
 		// Actions
 		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
-//		add_filter( 'woocommerce_billing_fields', $this->override_billing_fields, 10, 1 );
 
 	}
 
@@ -141,7 +140,4 @@ class WC_Shipping_Free_Local_Pickup extends WC_Shipping_Method {
 		return str_replace( '-', '', sanitize_title( $code ) ) . ( strstr( $code, '*' ) ? '*' : '' );
 	}
 
-	function override_billing_fields() {
-		
-	}
 }

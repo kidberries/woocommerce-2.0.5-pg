@@ -79,7 +79,22 @@ class WC_Product_Variation extends WC_Product {
 		// Get post data
 		$this->parent = ! empty( $args['parent'] ) ? $args['parent'] : get_product( $this->id );
 		$this->post   = ! empty( $this->parent->post ) ? $this->parent->post : array();
-		$this->product_custom_fields = get_post_meta( $this->variation_id );
+
+		// Inheritance from the parent
+		$parent_custom_fields = get_post_meta( $args['parent_id'] );
+		$variation_custom_fields = get_post_meta( $this->variation_id );
+
+		$this->product_custom_fields = $variation_custom_fields;
+		$complete_custom_fields = array_merge( array_keys($parent_custom_fields), array_keys($variation_custom_fields) );
+
+		foreach ( $complete_custom_fields as $field ) {
+			if( isset( $parent_custom_fields[ $field ] ) ) {
+				$this->product_custom_fields[ $field ][0] = $variation_custom_fields[ $field ][0] ? $variation_custom_fields[ $field ][0] : $parent_custom_fields[ $field ][0];
+			}
+			else if( isset( $variation_custom_fields[ $field ] ) ) {
+				$this->product_custom_fields[ $field ] = $variation_custom_fields[ $field ];
+			}
+		}
 
 		// Get the variation attributes from meta
 		foreach ( $this->product_custom_fields as $name => $value ) {
@@ -147,6 +162,8 @@ class WC_Product_Variation extends WC_Product {
 		$this->price         = isset( $this->product_custom_fields['_price'][0] ) ? $this->product_custom_fields['_price'][0] : '';
 		$this->regular_price = isset( $this->product_custom_fields['_regular_price'][0] ) ? $this->product_custom_fields['_regular_price'][0] : '';
 		$this->sale_price    = isset( $this->product_custom_fields['_sale_price'][0] ) ? $this->product_custom_fields['_sale_price'][0] : '';
+
+
 
 		// Backwards compat for prices
 		if ( $this->price !== '' && $this->regular_price == '' ) {

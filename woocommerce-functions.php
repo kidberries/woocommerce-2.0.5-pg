@@ -1709,8 +1709,12 @@ function woocommerce_save_address() {
 }
 add_action( 'template_redirect', 'woocommerce_save_address' );
 
-// Kidberries team
-// Local Delivery Checkout Fields Override
+
+/*
+ *  Kidberries team
+ *  Local Delivery Checkout Fields Override
+ */
+
 function local_delivery_override_shipping_fields( $fields ) {
 	global $woocommerce;
 	if( 'local_delivery' === $woocommerce->session->chosen_shipping_method )
@@ -1735,3 +1739,30 @@ add_filter( 'woocommerce_billing_fields', 'local_delivery_override_billing_field
 add_filter( 'woocommerce_shipping_fields', 'local_delivery_override_shipping_fields', 1, 1 );
 
 
+
+/*
+ *  Local Pickup Checkout Fields Override
+ */
+
+function local_pickup_override_shipping_fields( $fields ) {
+	global $woocommerce;
+	if( 'local_pickup' === $woocommerce->session->chosen_shipping_method )
+		return local_pickup_override_fields( $fields, 'shipping' );
+	return $fields;
+}
+function local_pickup_override_billing_fields( $fields ) {
+	global $woocommerce;
+	if( 'local_pickup' === $woocommerce->session->chosen_shipping_method )
+		return local_pickup_override_fields( $fields, 'billing' );
+	return $fields;
+}
+function local_pickup_override_fields( $fields, $block_name ) {
+
+    unset( $fields[ $block_name . '_first_name' ][ 'required' ] );
+    foreach( array('country','last_name', 'postcode', 'state', 'company', 'address_1', 'address_2', 'city' ) as $field ) {
+        unset( $fields[ $block_name . '_' . $field ] );
+    }
+    return $fields;
+}
+add_filter( 'woocommerce_billing_fields', 'local_pickup_override_billing_fields', 1, 1 );
+add_filter( 'woocommerce_shipping_fields', 'local_pickup_override_shipping_fields', 1, 1 );

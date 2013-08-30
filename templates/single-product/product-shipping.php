@@ -16,7 +16,7 @@
     <span class="title"><span class="big">Доставка:</span></span>
     <ul id="shipping_method">
     </ul>
-    <small>* <em>стоимость доставки <strong>вместе с этим товаром</strong></em></small>
+    <small>* <em>стоимость доставки вашей корзины <strong>вместе с этим товаром</strong></em></small>
 </div>
 
 <script type="text/javascript">

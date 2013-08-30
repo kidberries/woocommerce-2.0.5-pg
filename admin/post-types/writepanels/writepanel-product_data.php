@@ -113,7 +113,7 @@ function woocommerce_product_data_box() {
 
 			echo '</div>';
 
-			echo '<div class="options_group pricing show_if_simple show_if_external">';
+			echo '<div class="options_group pricing show_if_simple show_if_variable show_if_external">';
 
 				// Purchase Price
 				woocommerce_wp_text_input( array( 'id' => '_purchase_price', 'class' => 'wc_input_price short', 'label' => __( 'Purchase Price', 'woocommerce' ) . ' ('.get_woocommerce_currency_symbol().')', 'type' => 'text', 'custom_attributes' => array(
@@ -869,7 +869,7 @@ function woocommerce_process_product_meta( $post_id, $post ) {
 	update_post_meta( $post_id, '_product_attributes', $attributes );
 
 	// Sales and prices
-	if ( in_array( $product_type, array( 'variable', 'grouped' ) ) ) {
+	if ( in_array( $product_type, array( 'grouped' ) ) ) {
 
 		// Variable and grouped products have no prices
 		update_post_meta( $post_id, '_purchase_price', '' );

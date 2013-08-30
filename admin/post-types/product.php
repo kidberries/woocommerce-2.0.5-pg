@@ -725,7 +725,7 @@ function woocommerce_admin_product_quick_edit_save( $post_id, $post ) {
 	if ( isset( $_POST['_visibility'] ) ) update_post_meta( $post_id, '_visibility', woocommerce_clean( $_POST['_visibility'] ) );
 	if ( isset( $_POST['_featured'] ) ) update_post_meta( $post_id, '_featured', 'yes' ); else update_post_meta( $post_id, '_featured', 'no' );
 
-	if ( $product->is_type('simple') || $product->is_type('external') ) {
+	if ( ! $product->is_type('grouped')  ) {
 
 		if ( isset( $_POST['_regular_price'] ) ) update_post_meta( $post_id, '_regular_price', woocommerce_clean( $_POST['_regular_price'] ) );
 		if ( isset( $_POST['_sale_price'] ) ) update_post_meta( $post_id, '_sale_price', woocommerce_clean( $_POST['_sale_price'] ) );
@@ -746,10 +746,8 @@ function woocommerce_admin_product_quick_edit_save( $post_id, $post ) {
 				update_post_meta( $post_id, '_price', woocommerce_clean( $_POST['_regular_price'] ) );
 			}
 		}
-	}
 
-	// Handle stock
-	if ( ! $product->is_type('grouped') ) {
+		// Handle stock
 		if ( isset( $_POST['_manage_stock'] ) ) {
 			update_post_meta( $post_id, '_manage_stock', 'yes' );
 			update_post_meta( $post_id, '_stock', (int) $_POST['_stock'] );
@@ -1037,7 +1035,7 @@ function woocommerce_admin_product_bulk_edit_save( $post_id, $post ) {
 		update_post_meta( $post_id, '_featured', stripslashes( $_REQUEST['_featured'] ) );
 
 	// Handle price - remove dates and set to lowest
-	if ( $product->is_type( 'simple' ) || $product->is_type( 'external' ) ) {
+	if ( ! $product->is_type( 'grouped' ) ) {
 
 		$price_changed = false;
 
@@ -1132,11 +1130,8 @@ function woocommerce_admin_product_bulk_edit_save( $post_id, $post ) {
 				update_post_meta( $post_id, '_price', $product->regular_price );
 			}
 		}
-	}
 
-	// Handle stock
-	if ( ! $product->is_type( 'grouped' ) ) {
-
+		// Handle stock
 		if ( ! empty( $_REQUEST['change_stock'] ) ) {
 			update_post_meta( $post_id, '_stock', (int) $_REQUEST['_stock'] );
 			update_post_meta( $post_id, '_manage_stock', 'yes' );

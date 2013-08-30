@@ -30,6 +30,7 @@ class WC_Shortcodes {
 		add_shortcode( 'changeable', array( $this, 'changeable_attribute' ) );
 		add_shortcode( 'changeables', array( $this, 'changeables_section' ) );
 
+
 		// Pages
 		add_shortcode( 'woocommerce_cart', array( $this, 'cart' ) );
 		add_shortcode( 'woocommerce_checkout', array( $this, 'checkout' ) );
@@ -41,6 +42,7 @@ class WC_Shortcodes {
 		add_shortcode( 'woocommerce_view_order', array( $this, 'view_order' ) );
 		add_shortcode( 'woocommerce_pay', array( $this, 'pay' ) );
 		add_shortcode( 'woocommerce_thankyou', array( $this, 'thankyou' ) );
+		add_shortcode( 'woocommerce_product_list', array( $this, 'product_list' ) );
 	}
 
 	/**
@@ -186,6 +188,18 @@ class WC_Shortcodes {
 	public function thankyou( $atts ) {
 		global $woocommerce;
 		return $woocommerce->shortcode_wrapper( array( 'WC_Shortcode_Thankyou', 'output' ), $atts );
+	}
+
+	/**
+	 * Product List page shortcode.
+	 *
+	 * @access public
+	 * @param mixed $atts
+	 * @return string
+	 */
+	public function product_list( $atts ) {
+		global $woocommerce;
+		return $woocommerce->shortcode_wrapper( array( 'WC_Shortcode_Product_List', 'output' ), $atts );
 	}
 
 	/**
@@ -1088,4 +1102,5 @@ class WC_Shortcodes {
 
 		return '<div class="woocommerce">' . ob_get_clean() . '</div>';
 	}
+
 }
