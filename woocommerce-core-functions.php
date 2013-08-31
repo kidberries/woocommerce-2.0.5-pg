@@ -1957,7 +1957,7 @@ function woocommerce_init_roles() {
 		) );
 
 		// Shop Administrator role
-		add_role( 'shop_administrator0', __( 'Shop Administrator', 'woocommerce' ), array(
+		add_role( 'shop_administrator', __( 'Shop Administrator', 'woocommerce' ), array(
 		    'level_10'               => true,
 		    'level_9'                => true,
 		    'level_8'                => true,
