@@ -422,9 +422,8 @@
 				var variation_title = variation.image_title;
 
 				$variation_form.find('.variations_button').show();
-			        $variation_form.find('.single_variation').html( variation.price_html + variation.availability_html  );
+			        $variation_form.find('.single_variation').html( variation.price_html + variation.availability_html );
 			        $('.single_variation.alternate').html( '<p class="price">' + $(variation.price_html).find('.amount').html() + '</p>' );
-					
 
 			        if ( ! o_src ) {
 			        	o_src = ( ! $product_img.attr('src') ) ? '' : $product_img.attr('src');
@@ -515,9 +514,6 @@
 
 			        $single_variation_wrap.slideDown('200').trigger( 'show_variation', [ variation ] );
 
-					
-					Cufon.replace(".digit, .currency", { fontFamily: 'MyriadPro' });
-					Cufon.replace(".stock", { fontFamily: 'Calibri' });
 				});
     };
 

@@ -26,12 +26,7 @@ $available_methods = $woocommerce->shipping->get_available_shipping_methods();
 				<th><?php _e( 'Cart Subtotal', 'woocommerce' ); ?></th>
 				<td><?php echo $woocommerce->cart->get_cart_subtotal(); ?></td>
 			</tr>
-			<?php foreach ( $woocommerce->cart->discount_totals as $discount_name => $discount_value ) : ?>
-				<tr class="cart-discount-total">
-					<th><strong><?php  if($woocommerce->cart->discount_totals[ $discount_name ]>0) { _e( 'Discount:', 'woocommerce'); } ?> <?php echo $discount_name; ?></strong></th>
-					<td><strong<?php if($woocommerce->cart->discount_totals[ $discount_name ]>0) {echo ' class="negative"';} ?>><?php if($woocommerce->cart->discount_totals[ $discount_name ]>0) {echo "-";} ?><?php echo woocommerce_price( $woocommerce->cart->discount_totals[ $discount_name ] ); ?></strong></td>
-				</tr>
-			<?php endforeach; ?>			
+			
 			<?php if ( $woocommerce->cart->get_discounts_before_tax() ) : ?>
 
 			<tr class="discount">
@@ -133,6 +128,13 @@ $available_methods = $woocommerce->shipping->get_available_shipping_methods();
 
 			<?php do_action( 'woocommerce_review_order_before_order_total' ); ?>
 
+			<?php foreach ( $woocommerce->cart->discount_totals as $discount_name => $discount_value ) : ?>
+				<tr class="cart-discount-total">
+					<th><strong><?php  if($woocommerce->cart->discount_totals[ $discount_name ]>0) { _e( 'Total in Discount Action:', 'woocommerce'); } ?> <?php echo $discount_name; ?></strong></th>
+					<td><strong<?php if($woocommerce->cart->discount_totals[ $discount_name ]>0) {echo ' class="negative"';} ?>><?php if($woocommerce->cart->discount_totals[ $discount_name ]>0) {echo "-";} ?><?php echo woocommerce_price( $woocommerce->cart->discount_totals[ $discount_name ] ); ?></strong></td>
+				</tr>
+			<?php endforeach; ?>
+            
 			<tr class="total">
 				<th><strong><?php _e( 'Order Total', 'woocommerce' ); ?></strong></th>
 				<td>

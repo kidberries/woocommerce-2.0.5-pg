@@ -44,6 +44,7 @@ class WC_Shipping_Local_Pickup extends WC_Shipping_Method {
 		$this->codes		= $this->get_option( 'codes' );
 		$this->availability	= $this->get_option( 'availability' );
 		$this->countries	= $this->get_option( 'countries' );
+		$this->instruction	= $this->get_option( 'instruction' );
 
 		// Actions
 		add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -63,6 +64,7 @@ class WC_Shipping_Local_Pickup extends WC_Shipping_Method {
 		$rate = array(
 			'id' 		=> $this->id,
 			'label' 	=> $this->title,
+			'info'		=> array ( 'instruction' => $this->instruction )
 		);
         
 		$this->add_rate($rate);
@@ -89,6 +91,14 @@ class WC_Shipping_Local_Pickup extends WC_Shipping_Method {
 				'description' 	=> __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
 				'default'		=> __( 'Local Pickup', 'woocommerce' ),
 				'desc_tip'      => true,
+			),
+			'instruction' => array(
+				'title' 		=> __( 'Pickup Customer Instruction', 'woocommerce' ),
+				'type' 			=> 'textarea',
+				'description' 	=> __( 'Instruction for Pickup. It will plased in transaction email.', 'woocommerce' ),
+				'default'		=> '',
+				'desc_tip'      => true,
+				'placeholder'	=> 'Baker str. Red door.'
 			),
 			'codes' => array(
 				'title' 		=> __( 'Zip/Post Codes', 'woocommerce' ),

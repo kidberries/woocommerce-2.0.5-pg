@@ -45,18 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 		?>
 	</tbody>
 	<tfoot>
-		<?php
-			if ( $totals = $order->get_order_item_totals() ) {
-				$i = 0;
-				foreach ( $totals as $total ) {
-					$i++;
-					?><tr>
-						<th scope="row" colspan="2" style="text-align:left; border: 1px solid #eee; <?php if ( $i == 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $total['label']; ?></th>
-						<td style="text-align:left; border: 1px solid #eee; <?php if ( $i == 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $total['value']; ?></td>
-					</tr><?php
-				}
-			}
-		?>
+		<?php woocommerce_get_template('emails/email-order-totals.php', array( 'order' => $order )); ?>
 	</tfoot>
 </table>
 
@@ -65,3 +54,4 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 <?php do_action( 'woocommerce_email_order_meta', $order, false ); ?>
 
 <?php do_action('woocommerce_email_footer'); ?>
+

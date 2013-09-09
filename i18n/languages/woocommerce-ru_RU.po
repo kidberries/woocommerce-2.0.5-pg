@@ -5452,6 +5452,11 @@ msgstr "Вы получили заказ от"
 msgid ". Their order is as follows:"
 msgstr ". Состав заказа:"
 
+#@ woocommerce
+msgid "You have received an order from %s. Their order is as follows:"
+msgstr "У нас новый заказ."
+
+
 #: templates/archive-product.php:70
 #: templates/loop-shop.php:36
 #: woocommerce-template.php:76
@@ -6454,6 +6459,10 @@ msgstr "Акция!"
 #@ woocommerce
 msgid "Discount:"
 msgstr "Акция:"
+
+#@ woocommerce
+msgid "Total in Discount Action:"
+msgstr "Итого по Акции:"
 
 #: templates/loop/add-to-cart.php:13
 #: templates/loop/add-to-cart.php:30

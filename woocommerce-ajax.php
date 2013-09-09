@@ -1828,7 +1828,6 @@ if( !function_exists( 'get_data_product_variations' ) ) {
                 $_attributes          = maybe_unserialize( get_post_meta( $product->id, '_product_attributes', true ) );
                 $available_variations = $product->get_available_variations();
 
-
                 foreach( $woocommerce->get_attribute_taxonomies() as $attribute_taxonomy ) {
                     $attribute_taxonomies[  'attribute_pa_' . sanitize_title($attribute_taxonomy->attribute_name) ] = $attribute_taxonomy;
                 }

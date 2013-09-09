@@ -163,8 +163,8 @@ class WC_Checkout {
 		if ( $woocommerce->session->order_awaiting_payment > 0 ) {
 
 			$order_id = absint( $woocommerce->session->order_awaiting_payment );
-
 			/* Check order is unpaid by getting its status */
+
 			$terms = wp_get_object_terms( $order_id, 'shop_order_status', array( 'fields' => 'slugs' ) );
 			$order_status = isset( $terms[0] ) ? $terms[0] : 'pending';
 
@@ -356,6 +356,10 @@ class WC_Checkout {
 		update_post_meta( $order_id, '_order_shipping', 		woocommerce_format_total( $woocommerce->cart->shipping_total ) );
 		update_post_meta( $order_id, '_order_discount', 		woocommerce_format_total( $woocommerce->cart->get_order_discount_total() ) );
 		update_post_meta( $order_id, '_cart_discount', 			woocommerce_format_total( $woocommerce->cart->get_cart_discount_total() ) );
+        
+        update_post_meta( $order_id, '_cart_actions_discount',  woocommerce_format_total( $woocommerce->cart->get_cart_actions_discount_total() ) );
+        update_post_meta( $order_id, '_cart_actions_discounts', $woocommerce->cart->get_cart_actions_discounts() );
+        
 		update_post_meta( $order_id, '_order_tax', 				woocommerce_format_total( $woocommerce->cart->tax_total ) );
 		update_post_meta( $order_id, '_order_shipping_tax', 	woocommerce_format_total( $woocommerce->cart->shipping_tax_total ) );
 		update_post_meta( $order_id, '_order_total', 			woocommerce_format_total( $woocommerce->cart->total ) );
@@ -371,7 +375,7 @@ class WC_Checkout {
 
 		// Order status
 		wp_set_object_terms( $order_id, 'pending', 'shop_order_status' );
-		
+
 		do_action( 'complete_order_'. $this->shipping_method->id );
 
 		return $order_id;

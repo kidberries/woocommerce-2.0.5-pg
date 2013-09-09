@@ -1020,7 +1020,7 @@ class WC_Cart {
 		 * @return float price
 		 */
 		public function get_discounted_price( $values, $price, $add_totals = false ) {
-            global $wpdb;
+			global $wpdb;
 
 			if ( ! $price ) return $price;
 
@@ -2071,8 +2071,7 @@ class WC_Cart {
 			// If the cart has compound tax, we want to show the subtotal as
 			// cart + shipping + non-compound taxes (after discount)
 			if ( $compound ) {
-
-				$cart_subtotal = woocommerce_price( $this->cart_contents_total + $this->shipping_total + $this->get_taxes_total( false ) );
+				$cart_subtotal = woocommerce_price( $this->cart_contents_total + $this->shipping_total + $this->get_taxes_total( false ) - $this->get_cart_actions_discount_total() );
 
 			// Otherwise we show cart items totals only (before discount)
 			} else {
@@ -2080,7 +2079,7 @@ class WC_Cart {
 				// Display varies depending on settings
 				if ( $this->tax_display_cart == 'excl' ) {
 
-					$cart_subtotal = woocommerce_price( $this->subtotal_ex_tax );
+					$cart_subtotal = woocommerce_price( $this->subtotal_ex_tax  - $this->get_cart_actions_discount_total() );
 
 					if ( $this->tax_total > 0 && $this->prices_include_tax ) {
 						$cart_subtotal .= ' <small>' . $woocommerce->countries->ex_tax_or_vat() . '</small>';
@@ -2088,7 +2087,7 @@ class WC_Cart {
 
 				} else {
 
-					$cart_subtotal = woocommerce_price( $this->subtotal );
+					$cart_subtotal = woocommerce_price( $this->subtotal  - $this->get_cart_actions_discount_total() );
 
 					if ( $this->tax_total > 0 && !$this->prices_include_tax ) {
 						$cart_subtotal .= ' <small>' . $woocommerce->countries->inc_tax_or_vat() . '</small>';
@@ -2221,6 +2220,18 @@ class WC_Cart {
 			}
 			return apply_filters( 'woocommerce_cart_total_discount', $total_discount, $this );
 		}
+        
+        public function get_cart_actions_discount_total() {
+            $actions_discount_total = 0;
+            foreach ( $this->discount_totals as $discount_name => $discount_value ) {
+                $actions_discount_total += $this->discount_totals[ $discount_name ];
+            }
+            return $actions_discount_total;
+        }
+        
+        public function get_cart_actions_discounts() {
+            return apply_filters( 'woocommerce_cart_actions_discounts', $this->discount_totals, $this );
+        }
         
         public function apply_cart_discouts_rules() {
             global $wpdb;
@@ -2450,7 +2461,7 @@ class WC_Cart {
                                             $discount_value = $this->cart_contents[ $item_key ]['line_total_discounted'];
                                         
                                         // Applying discount value
-                                        if( $discount['for_shipping'] or ($type == 'total_shipping_discout' or $type == 'fixed_shipping_total') ) {
+                                        if( $discount['for_shipping'] == 'yes' or ($type == 'total_shipping_discout' or $type == 'fixed_shipping_total') ) {
                                             $for_methods  = maybe_unserialize( $discount['shipping'] );
                                             foreach( $for_methods as $method ) {
                                                 $this->cart_contents[ $item_key ]['line_shipping_discount'][ $method ] += $discount_value;

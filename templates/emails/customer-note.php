@@ -33,40 +33,17 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly ?>
 		<?php echo $order->email_order_items_table( $order->is_download_permitted(), true ); ?>
 	</tbody>
 	<tfoot>
-		<?php
-			if ( $totals = $order->get_order_item_totals() ) {
-				$i = 0;
-				foreach ( $totals as $total ) {
-					$i++;
-					?><tr>
-						<th scope="row" colspan="2" style="text-align:left; border: 1px solid #eee; <?php if ( $i == 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $total['label']; ?></th>
-						<td style="text-align:left; border: 1px solid #eee; <?php if ( $i == 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $total['value']; ?></td>
-					</tr><?php
-				}
-			}
-		?>
+		<?php woocommerce_get_template('emails/email-order-totals.php', array( 'order' => $order )); ?>
 	</tfoot>
 </table>
 
 <?php do_action('woocommerce_email_after_order_table', $order, false); ?>
 
 <?php do_action( 'woocommerce_email_order_meta', $order, false ); ?>
-<?php /*/ ?>
-<h2><?php _e( 'Customer details', 'woocommerce' ); ?></h2>
 
-<?php if ($order->shipping_email) : ?>
-	<p><strong><?php _e( 'Email:', 'woocommerce' ); ?></strong> <?php echo $order->shipping_email; ?></p>
-<?php elseif ($order->billing_email) : ?>
-	<p><strong><?php _e( 'Email:', 'woocommerce' ); ?></strong> <?php echo $order->billing_email; ?></p>
-<?php endif; ?>
+<?php woocommerce_get_template('emails/email-pickup-instruction.php', array( 'order' => $order )); ?>
 
-<?php if ($order->shipping_phone) : ?>
-	<p><strong><?php _e( 'Tel:', 'woocommerce' ); ?></strong> <?php echo $order->shipping_phone; ?></p>
-<?php elseif ($order->billing_phone) : ?>
-	<p><strong><?php _e( 'Tel:', 'woocommerce' ); ?></strong> <?php echo $order->billing_phone; ?></p>
-<?php endif; ?>
-<?php /*/ ?>
-<?php woocommerce_get_template('emails/email-cstomer-details.php', array( 'order' => $order )); ?>
+<?php woocommerce_get_template('emails/email-customer-details.php', array( 'order' => $order )); ?>
 
 <?php woocommerce_get_template('emails/email-addresses.php', array( 'order' => $order )); ?>
 

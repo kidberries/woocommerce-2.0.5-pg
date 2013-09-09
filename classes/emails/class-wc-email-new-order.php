@@ -24,7 +24,7 @@ class WC_Email_New_Order extends WC_Email {
 		$this->title 			= __( 'New order', 'woocommerce' );
 		$this->description		= __( 'New order emails are sent when an order is received/paid by a customer.', 'woocommerce' );
 
-		$this->heading 			= __( 'New customer order', 'woocommerce' );
+		$this->heading 		= __( 'New customer order', 'woocommerce' );
 		$this->subject      	= __( '[{blogname}] New customer order ({order_number}) - {order_date}', 'woocommerce' );
 
 		$this->template_html 	= 'emails/admin-new-order.php';
@@ -38,6 +38,7 @@ class WC_Email_New_Order extends WC_Email {
 		add_action( 'woocommerce_order_status_failed_to_completed_notification', array( $this, 'trigger' ) );
 		add_action( 'woocommerce_order_status_failed_to_on-hold_notification', array( $this, 'trigger' ) );
 
+
 		// Call parent constructor
 		parent::__construct();
 
@@ -47,6 +48,17 @@ class WC_Email_New_Order extends WC_Email {
 		if ( ! $this->recipient )
 			$this->recipient = get_option( 'admin_email' );
 	}
+
+        /**
+         * get_attachments function.
+         *
+         * @access public
+         * @return string
+         */
+        function get_attachments($order_id) {
+                return apply_filters( 'woocommerce_email_attachments_' . $this->id, $order_id );
+        }
+
 
 	/**
 	 * trigger function.
@@ -58,7 +70,10 @@ class WC_Email_New_Order extends WC_Email {
 		global $woocommerce;
 
 		if ( $order_id ) {
-			$this->object 		= new WC_Order( $order_id );
+
+            wp_cache_flush();
+			$this->object	= new WC_Order( $order_id);
+
 
 			$this->find[] = '{order_date}';
 			$this->replace[] = date_i18n( woocommerce_date_format(), strtotime( $this->object->order_date ) );
@@ -70,7 +85,10 @@ class WC_Email_New_Order extends WC_Email {
 		if ( ! $this->is_enabled() || ! $this->get_recipient() )
 			return;
 
-		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $attachments = $this->get_attachments($order_id);
+		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $attachments );
+		
+		apply_filters( 'woocommerce_email_remove_attachments_' . $this->id, $attachments );
 	}
 
 	/**
@@ -82,7 +100,7 @@ class WC_Email_New_Order extends WC_Email {
 	function get_content_html() {
 		ob_start();
 		woocommerce_get_template( $this->template_html, array(
-			'order' 		=> $this->object,
+			'order' 	=> $this->object,
 			'email_heading' => $this->get_heading()
 		) );
 		return ob_get_clean();
@@ -97,7 +115,7 @@ class WC_Email_New_Order extends WC_Email {
 	function get_content_plain() {
 		ob_start();
 		woocommerce_get_template( $this->template_plain, array(
-			'order' 		=> $this->object,
+			'order' 	=> $this->object,
 			'email_heading' => $this->get_heading()
 		) );
 		return ob_get_clean();

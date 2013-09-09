@@ -116,6 +116,9 @@ class WC_Order {
 
 	/** @public string Before tax discount total */
 	public $cart_discount;
+    
+    public $cart_actions_discount;
+    public $cart_actions_discounts;
 
 	/** @public string Tax for the items total */
 	public $order_tax;
@@ -244,6 +247,8 @@ class WC_Order {
 			'payment_method_title' 	=> '',
 			'order_discount'		=> '',
 			'cart_discount'			=> '',
+            'cart_actions_discount'	=> '',
+            'cart_actions_discounts'=> '',
 			'order_tax'				=> '',
 			'order_shipping'		=> '',
 			'order_shipping_real'	=> '',
@@ -758,7 +763,54 @@ class WC_Order {
 
 		return apply_filters( 'woocommerce_order_formatted_line_subtotal', $subtotal, $item, $this );
 	}
+	/**
+	 * Gets line total - formatted for display.
+	 *
+	 * @access public
+	 * @param mixed $item
+	 * @return string
+	 */
+	public function get_formatted_line_total( $item, $tax_display = '' ) {
 
+		if ( ! $tax_display )
+			$tax_display = $this->tax_display_cart;
+
+		$total = 0;
+
+		if (!isset($item['line_subtotal']) || !isset($item['line_subtotal_tax'])) return;
+
+		if ( $tax_display == 'excl' ) {
+			if ( $this->prices_include_tax ) $ex_tax_label = 1; else $ex_tax_label = 0;
+			$total = woocommerce_price( $this->get_line_total( $item ), array( 'ex_tax_label' => $ex_tax_label ) );
+		} else {
+			$total = woocommerce_price( $this->get_line_total( $item, true ) );
+		}
+
+		return apply_filters( 'woocommerce_order_formatted_line_total', $total, $item, $this );
+	}
+
+	/**
+	 * Gets line total and subtotal - formatted for display.
+	 *
+	 * @access public
+	 * @param mixed $item
+	 * @return string
+	 */
+
+	public function get_formatted_line( $item, $tax_display = '' ) {
+
+		$line     = array();
+        $subtotal = $this->get_formatted_line_subtotal( $item, $tax_display );
+        $total    = $this->get_formatted_line_total( $item, $tax_display );
+        if( $subtotal != $total ) {
+            if( $subtotal )
+                $line[] = '<del><small>' . $subtotal . '</small></del>';
+            if( $total )
+                $line[] = '<ins>' . $total . '</ins>';
+        }
+
+		return apply_filters( 'woocommerce_order_formatted_line', implode(' ', $line) , $item, $this );
+	}
 
 	/**
 	 * Gets order total - formatted for display.
@@ -876,7 +928,7 @@ class WC_Order {
 
 			}
 
-			$shipping = sprintf( __( '&nbsp;<small>%s - %s</small> ', 'woocommerce' ), $this->get_shipping_method(), $tax_text ) . $shipping;
+			$shipping = sprintf( __( '&nbsp;<small>%s: %s</small> ', 'woocommerce' ), $this->get_shipping_method(), $tax_text ) . $shipping;
 
 		} elseif ( $this->get_shipping_method() ) {
 			$shipping = $this->get_shipping_method();
@@ -938,6 +990,7 @@ class WC_Order {
 
 		$total_rows = array();
 
+
 		if ( $subtotal = $this->get_subtotal_to_display() )
 			$total_rows['cart_subtotal'] = array(
 				'label' => __( 'Cart Subtotal:', 'woocommerce' ),
@@ -953,12 +1006,11 @@ class WC_Order {
 		if ( $this->get_shipping_method() ) {
 			if( $this->shipping_method == 'local_pickup' ) {
 				$total_rows['shipping'] = array(
-					'label' => __( 'Local Pickup', 'woocommerce' ),
-				//	'value' => $this->get_shipping_to_display()
+					'label' => __( 'Shipping:', 'woocommerce' ) . ' ' . $this->get_shipping_to_display()
 				);
 			} else {
 				$total_rows['shipping'] = array(
-					'label' => __( 'Shipping:', 'woocommerce' ),
+					'label' => __( 'Shipping:' ),
 					'value'	=> $this->get_shipping_to_display()
 				);
 			}
@@ -1033,6 +1085,17 @@ class WC_Order {
 				'label' => __( 'Order Discount:', 'woocommerce' ),
 				'value'	=> '-' . $this->get_order_discount_to_display()
 			);
+
+
+        if( $this->cart_actions_discount ) {
+            $cart_actions_discounts = unserialize($this->cart_actions_discounts);
+            foreach( $cart_actions_discounts as $key => $value ) {
+                $total_rows[ 'cart_actions_discount_' . sanitize_title( $key ) ] = array(
+                    'label' => __( 'Total in Discount Action:', 'woocommerce' ) . ' "' . $key . '"',
+                    'value'	=> woocommerce_price( -1 * $value )
+                );
+            }
+        }
 
 		$total_rows['order_total'] = array(
 			'label' => __( 'Order Total:', 'woocommerce' ),
@@ -1259,6 +1322,7 @@ class WC_Order {
 				do_action( 'woocommerce_order_status_' . $new_status->slug, $this->id );
 				do_action( 'woocommerce_order_status_' . $this->status . '_to_' . $new_status->slug, $this->id );
 				do_action( 'woocommerce_order_status_changed', $this->id, $this->status, $new_status->slug );
+
 
 				if ( $old_status )
 					$this->add_order_note( $note . sprintf( __( 'Order status changed from %s to %s.', 'woocommerce' ), __( $old_status->name, 'woocommerce' ), __( $new_status->name, 'woocommerce' ) ) );

@@ -81,19 +81,22 @@ class WC_Product_Variation extends WC_Product {
 		$this->post   = ! empty( $this->parent->post ) ? $this->parent->post : array();
 
 		// Inheritance from the parent
-		$parent_custom_fields = get_post_meta( $args['parent_id'] );
-		$variation_custom_fields = get_post_meta( $this->variation_id );
+        $this->product_custom_fields = get_post_meta( $this->variation_id );
+		$parent_custom_fields = get_post_meta( $this->id );
 
-		$this->product_custom_fields = $variation_custom_fields;
-		$complete_custom_fields = array_merge( array_keys($parent_custom_fields), array_keys($variation_custom_fields) );
+		$complete_custom_fields = array (
+			'_price','_purchase_price','_regular_price','_sale_price','_sale_price_dates_from','_sale_price_dates_to','_sale_price_time_from','_sale_price_time_to',
+			'_sku','_stock','_weight','_length','_width','_height','_downloadable','_virtual'
+		);
 
 		foreach ( $complete_custom_fields as $field ) {
-			if( isset( $parent_custom_fields[ $field ] ) ) {
-				$this->product_custom_fields[ $field ][0] = $variation_custom_fields[ $field ][0] ? $variation_custom_fields[ $field ][0] : $parent_custom_fields[ $field ][0];
-			}
-			else if( isset( $variation_custom_fields[ $field ] ) ) {
-				$this->product_custom_fields[ $field ] = $variation_custom_fields[ $field ];
-			}
+            if( isset( $this->product_custom_fields[ $field ][0] ) && $this->product_custom_fields[ $field ][0] !== '' ) {
+            } else {
+                // The value is NOT set - inheritance from the parent product
+                if( isset( $parent_custom_fields[ $field ][0] ) && $parent_custom_fields[ $field ][0] !== '' ) {
+                    $this->product_custom_fields[ $field ] = $parent_custom_fields[ $field ];
+                }
+            }
 		}
 
 		// Get the variation attributes from meta
@@ -162,8 +165,6 @@ class WC_Product_Variation extends WC_Product {
 		$this->price         = isset( $this->product_custom_fields['_price'][0] ) ? $this->product_custom_fields['_price'][0] : '';
 		$this->regular_price = isset( $this->product_custom_fields['_regular_price'][0] ) ? $this->product_custom_fields['_regular_price'][0] : '';
 		$this->sale_price    = isset( $this->product_custom_fields['_sale_price'][0] ) ? $this->product_custom_fields['_sale_price'][0] : '';
-
-
 
 		// Backwards compat for prices
 		if ( $this->price !== '' && $this->regular_price == '' ) {

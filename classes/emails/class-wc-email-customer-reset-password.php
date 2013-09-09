@@ -70,7 +70,6 @@ class WC_Email_Customer_Reset_Password extends WC_Email {
 			return;
 
 		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-
 	}
 
 	/**
